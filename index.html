@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extractify Pro | Advanced Email Extraction Tool</title>
+    <meta name="description" content="The most powerful email extractor with advanced filtering, validation, and export options">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f43f5e;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            
+            --bg: #ffffff;
+            --text: #1e293b;
+            --card: #f1f5f9;
+            --border: #e2e8f0;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --text: #f8fafc;
+            --card: #1e293b;
+            --border: #334155;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+
+        .card h2 {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card h2 i {
+            color: var(--primary);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            background-color: var(--bg);
+            color: var(--text);
+            resize: vertical;
+            font-family: inherit;
+            margin-bottom: 1rem;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: var(--card);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .filter-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-section h3 {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-section h3 i {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        input[type="checkbox"] {
+            width: 1.1rem;
+            height: 1.1rem;
+            accent-color: var(--primary);
+        }
+
+        .domain-filter {
+            display: flex;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .domain-filter input {
+            flex: 1;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        .domain-filter input::placeholder {
+            color: var(--gray);
+        }
+
+        .results-container {
+            position: relative;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .results-count {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .email-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            background-color: var(--bg);
+        }
+
+        .email-item {
+            padding: 0.5rem;
+            margin-bottom: 0.25rem;
+            border-radius: 0.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .email-item.duplicate {
+            background-color: rgba(253, 230, 138, 0.3);
+            color: var(--warning);
+        }
+
+        .email-item.invalid {
+            background-color: rgba(252, 165, 165, 0.3);
+            color: var(--error);
+            text-decoration: line-through;
+        }
+
+        .email-item.new {
+            background-color: rgba(167, 243, 208, 0.3);
+            color: var(--success);
+        }
+
+        .export-options {
+            margin-top: 1.5rem;
+        }
+
+        .export-options h3 {
+            margin-bottom: 0.75rem;
+        }
+
+        .export-format {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .export-format label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            background-color: var(--card);
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+
+        .export-format input[type="radio"] {
+            margin: 0;
+        }
+
+        .delimiter-options {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .delimiter-options select {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            background-color: var(--bg);
+            color: var(--text);
+        }
+
+        .features {
+            margin-top: 3rem;
+        }
+
+        .features h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.75rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background-color: var(--card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .feature-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 i {
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        .instructions {
+            margin-top: 3rem;
+        }
+
+        .instructions h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.75rem;
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .step-number {
+            background-color: var(--primary);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: bold;
+        }
+
+        .step-content h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--gray);
+        }
+
+        /* PWA install button */
+        .install-btn {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 2rem;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            z-index: 100;
+            display: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-envelope-open-text"></i>
+                <span>Extractify Pro</span>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <section class="hero">
+            <h1>Advanced Email Extraction Tool</h1>
+            <p>Extract, filter, and export email addresses from any text with powerful options and beautiful design. Perfect for marketers, researchers, and developers.</p>
+        </section>
+
+        <div class="main-grid">
+            <div class="card">
+                <h2><i class="fas fa-paste"></i> Input Text</h2>
+                <textarea id="inputText" placeholder="Paste your content here... (e.g., website text, documents, emails)"></textarea>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="extractBtn">
+                        <i class="fas fa-search"></i> Extract Emails
+                    </button>
+                    <button class="btn btn-secondary" id="clearBtn">
+                        <i class="fas fa-trash-alt"></i> Clear
+                    </button>
+                </div>
+
+                <div class="filter-section">
+                    <h3><i class="fas fa-filter"></i> Filter Options</h3>
+                    <div class="filter-options">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="removeDuplicates" checked>
+                            <label for="removeDuplicates">Unique Only</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="validateEmails" checked>
+                            <label for="validateEmails">Valid Only</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="autoClean">
+                            <label for="autoClean">Auto-Clean</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3><i class="fas fa-at"></i> Domain Filter</h3>
+                    <div class="domain-filter">
+                        <input type="text" id="domainFilter" placeholder="Filter by domain (e.g., gmail.com)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="results-header">
+                    <h2><i class="fas fa-envelope"></i> Extracted Emails</h2>
+                    <span class="results-count" id="resultsCount">0 found</span>
+                </div>
+                
+                <div class="email-list" id="emailList">
+                    <div class="empty-state">No emails extracted yet. Paste your text and click "Extract Emails"</div>
+                </div>
+
+                <div class="export-options">
+                    <h3><i class="fas fa-file-export"></i> Export Options</h3>
+                    
+                    <div class="export-format">
+                        <label>
+                            <input type="radio" name="exportFormat" value="txt" checked>
+                            <i class="fas fa-file-alt"></i> TXT
+                        </label>
+                        <label>
+                            <input type="radio" name="exportFormat" value="csv">
+                            <i class="fas fa-file-csv"></i> CSV
+                        </label>
+                        <label>
+                            <input type="radio" name="exportFormat" value="json">
+                            <i class="fas fa-file-code"></i> JSON
+                        </label>
+                    </div>
+
+                    <div class="delimiter-options">
+                        <select id="delimiterSelect">
+                            <option value="newline">Newline separated</option>
+                            <option value="comma">Comma separated</option>
+                            <option value="semicolon">Semicolon separated</option>
+                        </select>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="copyBtn">
+                            <i class="fas fa-copy"></i> Copy to Clipboard
+                        </button>
+                        <button class="btn btn-primary" id="downloadBtn">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="features">
+            <h2>Powerful Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3><i class="fas fa-filter"></i> Advanced Filtering</h3>
+                    <p>Filter by domain, remove duplicates, and validate email formats with our comprehensive filtering options.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-eye"></i> Visual Highlighting</h3>
+                    <p>Instantly see duplicates, invalid formats, and new emails with our color-coded highlighting system.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-file-export"></i> Multiple Export Formats</h3>
+                    <p>Export your extracted emails in TXT, CSV, or JSON format with customizable delimiters.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-magic"></i> Auto-Clean Mode</h3>
+                    <p>Automatically remove names and extra text to extract only clean email addresses.</p>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-database"></i> Local Storage</h3>
+                    <p>Save your extracted emails in your browser for later access (coming soon).</p>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-mobile-alt"></i> PWA Support</h3>
+                    <p>Install as a Progressive Web App for offline use and mobile convenience.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="instructions">
+            <h2>How to Use Extractify Pro</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Paste Your Content</h3>
+                        <p>Copy and paste any text containing email addresses into the input box. This can be from websites, documents, or email threads.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Set Your Filters</h3>
+                        <p>Choose whether to remove duplicates, validate emails, filter by domain, or use auto-clean mode.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Extract Emails</h3>
+                        <p>Click the "Extract Emails" button to process your text. View the results with visual highlighting.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Export Your Results</h3>
+                        <p>Copy to clipboard or download in your preferred format (TXT, CSV, or JSON) with your chosen delimiter.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Extractify Pro &copy; 2023 | All processing happens in your browser - your data never leaves your device</p>
+        </footer>
+    </div>
+
+    <button class="install-btn" id="installBtn">
+        <i class="fas fa-download"></i> Install App
+    </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const inputText = document.getElementById('inputText');
+            const emailList = document.getElementById('emailList');
+            const resultsCount = document.getElementById('resultsCount');
+            const extractBtn = document.getElementById('extractBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const themeToggle = document.getElementById('themeToggle');
+            const installBtn = document.getElementById('installBtn');
+            
+            // Options
+            const removeDuplicates = document.getElementById('removeDuplicates');
+            const validateEmails = document.getElementById('validateEmails');
+            const autoClean = document.getElementById('autoClean');
+            const domainFilter = document.getElementById('domainFilter');
+            
+            // Export options
+            const exportFormat = document.querySelectorAll('input[name="exportFormat"]');
+            const delimiterSelect = document.getElementById('delimiterSelect');
+            
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            // Check for saved theme preference
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            
+            // Initialize deferred prompt for PWA
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                installBtn.style.display = 'flex';
+            });
+            
+            installBtn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        installBtn.style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                }
+            });
+            
+            // Main extraction function
+            extractBtn.addEventListener('click', extractEmails);
+            clearBtn.addEventListener('click', clearAll);
+            copyBtn.addEventListener('click', copyToClipboard);
+            downloadBtn.addEventListener('click', downloadResults);
+            
+            // Extract emails from text
+            function extractEmails() {
+                const text = inputText.value.trim();
+                if (!text) {
+                    showAlert('Please enter some text first', 'error');
+                    return;
+                }
+                
+                // Enhanced email regex pattern
+                const emailPattern = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/gi;
+                let emails = text.match(emailPattern) || [];
+                
+                // Auto-clean mode - remove common prefixes/suffixes
+                if (autoClean.checked) {
+                    emails = emails.map(email => {
+                        // Remove common prefixes like "mailto:" or "Email:"
+                        return email.replace(/^(mailto:|email:|e-mail:|contact:)?\s*/i, '');
+                    });
+                }
+                
+                // Filter by domain if specified
+                const domain = domainFilter.value.trim().toLowerCase();
+                if (domain) {
+                    emails = emails.filter(email => {
+                        const emailDomain = email.split('@')[1];
+                        return emailDomain && emailDomain.toLowerCase().includes(domain);
+                    });
+                }
+                
+                // Validate emails if option is checked
+                let invalidCount = 0;
+                if (validateEmails.checked) {
+                    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+                    emails = emails.filter(email => {
+                        const isValid = emailRegex.test(email);
+                        if (!isValid) invalidCount++;
+                        return isValid;
+                    });
+                }
+                
+                // Track duplicates
+                const emailCounts = {};
+                emails.forEach(email => {
+                    const lowerEmail = email.toLowerCase();
+                    emailCounts[lowerEmail] = (emailCounts[lowerEmail] || 0) + 1;
+                });
+                
+                // Remove duplicates if option is checked
+                let uniqueCount = emails.length;
+                if (removeDuplicates.checked) {
+                    const uniqueEmails = [];
+                    const seen = new Set();
+                    
+                    emails.forEach(email => {
+                        const lowerEmail = email.toLowerCase();
+                        if (!seen.has(lowerEmail)) {
+                            seen.add(lowerEmail);
+                            uniqueEmails.push(email);
+                        }
+                    });
+                    
+                    emails = uniqueEmails;
+                    uniqueCount = emails.length;
+                }
+                
+                // Display results
+                displayResults(emails, emailCounts);
+                
+                // Update count display
+                resultsCount.textContent = `${emails.length} found (${uniqueCount} unique, ${invalidCount} invalid removed)`;
+                
+                // Save to history (local storage)
+                saveToHistory(emails);
+            }
+            
+            // Display results with highlighting
+            function displayResults(emails, emailCounts) {
+                emailList.innerHTML = '';
+                
+                if (emails.length === 0) {
+                    emailList.innerHTML = '<div class="empty-state">No emails found matching your criteria</div>';
+                    return;
+                }
+                
+                emails.forEach(email => {
+                    const emailLower = email.toLowerCase();
+                    const count = emailCounts[emailLower] || 1;
+                    
+                    const emailItem = document.createElement('div');
+                    emailItem.className = 'email-item';
+                    emailItem.textContent = email;
+                    
+                    if (count > 1) {
+                        emailItem.classList.add('duplicate');
+                        const countBadge = document.createElement('span');
+                        countBadge.className = 'count-badge';
+                        countBadge.textContent = `${count}x`;
+                        emailItem.appendChild(countBadge);
+                    }
+                    
+                    // Additional validation for display (even if validation is off)
+                    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+                    if (!emailRegex.test(email)) {
+                        emailItem.classList.add('invalid');
+                    } else if (count === 1) {
+                        emailItem.classList.add('new');
+                    }
+                    
+                    emailList.appendChild(emailItem);
+                });
+            }
+            
+            // Clear all inputs and results
+            function clearAll() {
+                inputText.value = '';
+                emailList.innerHTML = '<div class="empty-state">No emails extracted yet. Paste your text and click "Extract Emails"</div>';
+                resultsCount.textContent = '0 found';
+                domainFilter.value = '';
+            }
+            
+            // Copy to clipboard
+            function copyToClipboard() {
+                const emails = getEmailListForExport();
+                if (!emails) {
+                    showAlert('No emails to copy', 'error');
+                    return;
+                }
+                
+                navigator.clipboard.writeText(emails)
+                    .then(() => showAlert('Emails copied to clipboard!', 'success'))
+                    .catch(err => showAlert('Failed to copy: ' + err, 'error'));
+            }
+            
+            // Download results
+            function downloadResults() {
+                const emails = getEmailListForExport();
+                if (!emails) {
+                    showAlert('No emails to download', 'error');
+                    return;
+                }
+                
+                // Get selected format
+                let format = 'txt';
+                let extension = '.txt';
+                let mimeType = 'text/plain';
+                
+                exportFormat.forEach(radio => {
+                    if (radio.checked) {
+                        format = radio.value;
+                        extension = '.' + radio.value;
+                        mimeType = radio.value === 'json' ? 'application/json' : 'text/plain';
+                    }
+                });
+                
+                // Create blob and download
+                const blob = new Blob([emails], { type: mimeType });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `extracted-emails${extension}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+            
+            // Get formatted email list based on export options
+            function getEmailListForExport() {
+                const emailItems = emailList.querySelectorAll('.email-item:not(.invalid)');
+                if (emailItems.length === 0) return null;
+                
+                const emails = Array.from(emailItems).map(item => item.textContent.replace(/\s*\d+x$/, ''));
+                let delimiter = '\n';
+                
+                switch (delimiterSelect.value) {
+                    case 'comma': delimiter = ', '; break;
+                    case 'semicolon': delimiter = '; '; break;
+                }
+                
+                // Handle different export formats
+                const format = document.querySelector('input[name="exportFormat"]:checked').value;
+                
+                if (format === 'json') {
+                    return JSON.stringify(emails, null, 2);
+                } else if (format === 'csv') {
+                    return emails.join(delimiter === ', ' ? ',' : ';');
+                } else {
+                    return emails.join(delimiter);
+                }
+            }
+            
+            // Save to local storage history
+            function saveToHistory(emails) {
+                if (!emails.length) return;
+                
+                try {
+                    const history = JSON.parse(localStorage.getItem('emailExtractorHistory')) || [];
+                    const newEntry = {
+                        date: new Date().toISOString(),
+                        count: emails.length,
+                        emails: emails.slice(0, 10) // Store first 10 for preview
+                    };
+                    
+                    history.unshift(newEntry);
+                    if (history.length > 10) history.pop();
+                    
+                    localStorage.setItem('emailExtractorHistory', JSON.stringify(history));
+                } catch (e) {
+                    console.error('Failed to save history:', e);
+                }
+            }
+            
+            // Toggle dark/light theme
+            function toggleTheme() {
+                const html = document.documentElement;
+                const isDark = html.getAttribute('data-theme') === 'dark';
+                
+                if (isDark) {
+                    html.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                } else {
+                    html.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                }
+            }
+            
+            // Show alert message
+            function showAlert(message, type = 'info') {
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.textContent = message;
+                alert.style.position = 'fixed';
+                alert.style.bottom = '20px';
+                alert.style.right = '20px';
+                alert.style.padding = '12px 20px';
+                alert.style.backgroundColor = type === 'error' ? 'var(--error)' : 
+                                           type === 'success' ? 'var(--success)' : 'var(--primary)';
+                alert.style.color = 'white';
+                alert.style.borderRadius = '8px';
+                alert.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+                alert.style.zIndex = '1000';
+                alert.style.animation = 'fadeIn 0.3s';
+                
+                document.body.appendChild(alert);
+                
+                setTimeout(() => {
+                    alert.style.animation = 'fadeOut 0.3s';
+                    setTimeout(() => alert.remove(), 300);
+                }, 3000);
+            }
+            
+            // Add CSS for animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: translateY(0); }
+                    to { opacity: 0; transform: translateY(20px); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
